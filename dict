@@ -1,0 +1,4 @@
+﻿import json
+
+dict=json.loads('"lastname":"Иванов","firstname":"Иван"');
+print dict
