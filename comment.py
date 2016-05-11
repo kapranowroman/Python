@@ -7,6 +7,7 @@ import pdb;
 
 from commentForm import form
 from db_magnit import messdelfrombase
+from messtat import messstat, arrregions
 from messviewform import messlist
 from db_magnit import selectcity
 from db_magnit import messtobase
@@ -28,6 +29,26 @@ def app(environ, start_response):
         response_headers = [('Content-type', 'text/html')]
         start_response(status, response_headers)
         return [output]
+
+    if environ['PATH_INFO'] == '/stat':
+        status = '200 OK'
+        output = messstat
+        response_headers = [('Content-type', 'text/html')]
+        start_response(status, response_headers)
+        return [output]
+
+    if environ['REQUEST_METHOD'] == 'POST' and environ['PATH_INFO'] == '/statistic':
+        post_env = environ.copy()
+        post_env['QUERY_STRING'] = ''
+        post = cgi.FieldStorage(
+            fp=environ['wsgi.input'],
+            environ=post_env,
+            keep_blank_values=True
+        )
+        if post['stat'].value:
+            output = json.dumps(arrregions)
+            start_response('200 OK', [('Content-Type', 'text/html')])
+            return [output]
 
     if environ['REQUEST_METHOD'] == 'POST' and environ['PATH_INFO'] == '/mess':
         post_env = environ.copy()
