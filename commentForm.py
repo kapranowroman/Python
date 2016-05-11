@@ -93,7 +93,7 @@ select {
 	<label>Телефон:</label>
 	<input type='text' oninput='vphone()' oblur='vphone()' id='Phone' name='Phone' title='+7(000)-000-00-00'>
 	<label>E-mail:</label>
-	<input type="email" id='Mail' name='Mail' >
+	<input type="email" id='Mail' oninput='validmail()' oblur='validmail()' name='Mail' >
 	<label>Комментарий:</label>
 	<textarea id="Message" oninput='validator("Message")' oblur='validator("Message")' name="Message" required></textarea>
 
@@ -110,6 +110,24 @@ select {
 
 <script type="text/javascript">
 var val={'LastName': 0, 'FirstName': 0, 'Fathername': 1, 'Phone': 1, 'Mail':1, "Message":0};
+function validmail(){
+if(document.getElementById('Mail').value!=''){
+			var mail_pattern=/^[\w\.\d-_]+@[\w\.\d-_]+\.\w{2,4}$/i;
+			if(mail_pattern.test(document.getElementById('Mail').value)==false){
+				document.getElementById('Mail').style.border="3px solid red";
+                val['Mail']=0;
+
+			}
+			else {
+				document.getElementById('Mail').style.border="";
+                val['Mail']=1;
+			}
+			}
+            else {
+            	document.getElementById('Mail').style.border="";
+            	val['Mail']=1;}
+
+}
 function validator(idfield){
 	if(document.getElementById(idfield).value!=''){
 			var adr_pattern=/^[a-zA-Zа-яА-Я'][a-zA-Zа-яА-Я-' ]+[a-zA-Zа-яА-Я']?$/;
