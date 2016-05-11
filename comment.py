@@ -10,7 +10,7 @@ from db_magnit import messdelfrombase
 from messviewform import messlist
 from db_magnit import selectcity
 from db_magnit import messtobase
-
+from db_magnit import messread
 
 
 def app(environ, start_response):
@@ -28,7 +28,20 @@ def app(environ, start_response):
         response_headers = [('Content-type', 'text/html')]
         start_response(status, response_headers)
         return [output]
-		
+
+    if environ['REQUEST_METHOD'] == 'POST' and environ['PATH_INFO'] == '/mess':
+        post_env = environ.copy()
+        post_env['QUERY_STRING'] = ''
+        post = cgi.FieldStorage(
+            fp=environ['wsgi.input'],
+            environ=post_env,
+            keep_blank_values=True
+            )
+        if post['mess'].value:
+            output=messread()
+            start_response('200 OK', [('Content-Type', 'text/html')])
+            return [output]
+
     if environ['REQUEST_METHOD'] == 'POST' and environ['PATH_INFO'] == '/delmess':
         
         post_env = environ.copy()

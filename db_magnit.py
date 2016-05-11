@@ -2,7 +2,7 @@
 import json
 import psycopg2
 import uuid
-connset="dbname='magnit3' user='python' host='localhost' password='python'"
+connset="dbname='magnit4' user='python' host='localhost' password='python'"
 
 
 def selectregion():
@@ -39,7 +39,8 @@ def messtobase(messdict):
                 print "ne pashet"
         message=json.loads(messdict)        
         message['personid']=str(uuid.uuid4())
-        
+        if message['cityid']=='':
+                message['cityid']='750edd5d-cfa0-47c6-aef0-78d67d0b20a5'
         cur=conn.cursor()
         cur.execute("""INSERT INTO persons(personid,lastname,firstname,fathername,cityid,phonenumber,mail,coment) VALUES (%(personid)s, %(lastname)s,%(firstname)s,%(fathername)s,%(cityid)s,%(phonenumber)s,%(mail)s,%(coment)s)""", message)
         conn.commit()
