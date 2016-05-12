@@ -1,9 +1,6 @@
 # coding: utf-8
 import cgi
-import sys
-import os
 import json
-
 
 from commentForm import form
 from db_magnit import messdelfrombase, regstat, citystat
@@ -22,7 +19,7 @@ def app(environ, start_response):
         start_response(status, response_headers)
         return [html]
 
-    if  environ['PATH_INFO'] == '/view':
+    if environ['PATH_INFO'] == '/view':
         status = '200 OK'
         output = messlist
         response_headers = [('Content-type', 'text/html')]
@@ -45,7 +42,7 @@ def app(environ, start_response):
             keep_blank_values=True
         )
         if post['stat'].value:
-            regstatistic=regstat()
+            regstatistic = regstat()
             output = json.dumps(regstatistic)
             start_response('200 OK', [('Content-Type', 'text/html')])
             return [output]
@@ -57,9 +54,9 @@ def app(environ, start_response):
             fp=environ['wsgi.input'],
             environ=post_env,
             keep_blank_values=True
-         )
+        )
         if post['statcity'].value:
-            statcity=json.loads(post['statcity'].value)
+            statcity = json.loads(post['statcity'].value)
             regstatistic = citystat(statcity)
             output = json.dumps(regstatistic)
             start_response('200 OK', [('Content-Type', 'text/html')])
@@ -72,14 +69,13 @@ def app(environ, start_response):
             fp=environ['wsgi.input'],
             environ=post_env,
             keep_blank_values=True
-            )
+        )
         if post['mess'].value:
-            output=messread()
+            output = messread()
             start_response('200 OK', [('Content-Type', 'text/html')])
             return [output]
 
     if environ['REQUEST_METHOD'] == 'POST' and environ['PATH_INFO'] == '/delmess':
-        
         post_env = environ.copy()
         post_env['QUERY_STRING'] = ''
         post = cgi.FieldStorage(
@@ -87,12 +83,12 @@ def app(environ, start_response):
             environ=post_env,
             keep_blank_values=True
         )
-        messid=post['messdel'].value
+        messid = post['messdel'].value
         messdelfrombase(messid)
-        output="Комментарий удален"
+        output = "Комментарий удален"
         start_response('200 OK', [('Content-Type', 'text/html')])
         return [output]
-    
+
     if environ['REQUEST_METHOD'] == 'POST' and environ['PATH_INFO'] == '/magnitsmg':
         post_env = environ.copy()
         post_env['QUERY_STRING'] = ''
@@ -101,12 +97,12 @@ def app(environ, start_response):
             environ=post_env,
             keep_blank_values=True
         )
-        mess=post['mess'].value
+        mess = post['mess'].value
         messtobase(mess)
-        output="Спасибо за комментарий!"
+        output = "Спасибо за комментарий!"
         start_response('200 OK', [('Content-Type', 'text/html')])
         return [output]
-    
+
     if environ['REQUEST_METHOD'] == 'POST' and environ['PATH_INFO'] == '/magnitcity':
         post_env = environ.copy()
         post_env['QUERY_STRING'] = ''
@@ -115,10 +111,11 @@ def app(environ, start_response):
             environ=post_env,
             keep_blank_values=True
         )
-        reg=json.loads(post['region'].value)
-        ooooo=selectcity(reg)
+        reg = json.loads(post['region'].value)
+        cutysel = selectcity(reg)
         start_response('200 OK', [('Content-Type', 'text/html')])
-        return [ooooo]
+        return [cutysel]
+
 
 if __name__ == '__main__':
     try:
@@ -127,6 +124,4 @@ if __name__ == '__main__':
         print('Serving on port 8088...')
         httpd.serve_forever()
     except KeyboardInterrupt:
-        print('Goodbye.')  
-
-
+        print('Goodbye.')

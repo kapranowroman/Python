@@ -1,8 +1,8 @@
- # coding: utf-8
+# coding: utf-8
 import json
 from db_magnit import selectregion
 
-js2="'"+selectregion()+"'"
+js2 = "'" + selectregion() + "'"
 form = b'''
 <!DOCTYPE html5>
 <html>
@@ -97,169 +97,156 @@ select {
 	<input type="email" id='Mail' oninput='validmail()' oblur='validmail()' name='Mail' >
 	<label>Комментарий:</label>
 	<textarea id="Message" oninput='validator("Message")' oblur='validator("Message")' name="Message" required></textarea>
-
-
-
 	<input type="button" value="Отправить" onclick="sendMessage()" />
 </form>
 </div>
 
 <script type="text/javascript">
-var val={'LastName': 0, 'FirstName': 0, 'Fathername': 1, 'Phone': 1, 'Mail':1, "Message":0};
-function validmail(){
-if(document.getElementById('Mail').value!=''){
-			var mail_pattern=/^[\w\.\d-_]+@[\w\.\d-_]+\.\w{2,4}$/i;
-			if(mail_pattern.test(document.getElementById('Mail').value)==false){
-				document.getElementById('Mail').style.border="3px solid red";
-                val['Mail']=0;
+    var val={'LastName': 0, 'FirstName': 0, 'Fathername': 1, 'Phone': 1, 'Mail':1, "Message":0}; //задаем обязательные поля
+    function validmail(){
+    if(document.getElementById('Mail').value!=''){
+        var mail_pattern=/^[\w\.\d-_]+@[\w\.\d-_]+\.\w{2,4}$/i;
+        if(mail_pattern.test(document.getElementById('Mail').value)==false){
+            document.getElementById('Mail').style.border="3px solid red";
+            val['Mail']=0;
 
-			}
-			else {
-				document.getElementById('Mail').style.border="";
-                val['Mail']=1;
-			}
-			}
-            else {
-            	document.getElementById('Mail').style.border="";
-            	val['Mail']=1;}
+        }
+        else {
+            document.getElementById('Mail').style.border="";
+            val['Mail']=1;
+        }
+    }
+    else {
+        document.getElementById('Mail').style.border="";
+        val['Mail']=1;}
+    }
 
-}
-function validator(idfield){
-	if(document.getElementById(idfield).value!=''){
-			var adr_pattern=/^[a-zA-Zа-яА-Я'][a-zA-Zа-яА-Я-' ]+[a-zA-Zа-яА-Я']?$/;
-			if(adr_pattern.test(document.getElementById(idfield).value)==false){
-				document.getElementById(idfield).style.border="3px solid red";
+    function validator(idfield){
+        if(document.getElementById(idfield).value!=''){
+            var adr_pattern=/^[a-zA-Zа-яА-Я'][a-zA-Zа-яА-Я-' ]+[a-zA-Zа-яА-Я']?$/;
+            if(adr_pattern.test(document.getElementById(idfield).value)==false){
+                document.getElementById(idfield).style.border="3px solid red";
                 val[idfield]=0;
-			}
-			else {
-				document.getElementById(idfield).style.border="";
-                val[idfield]=1;
-			}
-	}
-    else {
-        document.getElementById(idfield).style.border="";
-        val[idfield]=1;
-    }
-
-}
-function vphone(){
-
-	var tel =document.getElementById('Phone').value;
-	if(tel!=''){
-        if(tel.length==1){
-            tel="+7("+tel;
-        }
-        if(tel.length==6){
-            tel=tel+")";
-        }
-        if(tel.length==10||tel.length==13){
-            tel=tel+"-";
-        }
-       if(tel.length>16){
-            tel=tel.substring(0, tel.length - 1);
-       }
-        document.getElementById('Phone').value=tel;
-        if (/^\+\d\(\d{3}\)\d{3}-\d{2}-\d{2}$/.test(tel)==false){
-            document.getElementById('Phone').style='border: 3px solid red';
-        }
-        else
-            document.getElementById('Phone').style='border: 1px solid #ccc';
-    }
-    else {
-        document.getElementById('Phone').style='border: 1px solid #ccc';
-        val['Phone']=1;
-    }
-
-}
-
-function getXmlHttp() {
-    var xmlhttp;
-    try {
-      xmlhttp = new ActiveXObject("Msxml2.XMLHTTP");
-    } catch (e) {
-    try {
-      xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-    } catch (E) {
-      xmlhttp = false;
-    }
-    }
-    if (!xmlhttp && typeof XMLHttpRequest!='undefined') {
-      xmlhttp = new XMLHttpRequest();
-    }
-    return xmlhttp;
-  }
-
-function sendMessage() {
-
-    var summval=0;
-    var strsum='';
-    for (var i in val){summval=summval+val[i]; strsum=strsum+i+':'+val[i]};
-    if (summval==6){
-        var mess = new Object();
-        mess.lastname = document.getElementById('LastName').value;
-        mess.firstname = document.getElementById('FirstName').value;
-        mess.fathername=document.getElementById('Fathername').value;
-        mess.cityid=document.getElementById('City').value;
-        mess.phonenumber=document.getElementById('Phone').value;
-        mess.mail=document.getElementById('Mail').value;
-        mess.coment=document.getElementById('Message').value;
-        var jsonText = JSON.stringify(mess);
-        var xmlhttp = getXmlHttp(); // Создаём объект XMLHTTP
-            xmlhttp.open('POST', '/magnitsmg', true); // Открываем асинхронное соединение
-            xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded'); // Отправляем кодировку
-            xmlhttp.send('mess='+jsonText); // Отправляем POST-запрос
-            xmlhttp.onreadystatechange = function() { // Ждём ответа от сервера
-              if (xmlhttp.readyState == 4) { // Ответ пришёл
-                if(xmlhttp.status == 200) { // Сервер вернул код 200 (что хорошо)
-                  //document.getElementById("summ2").innerHTML = xmlhttp.responseText; // Выводим ответ сервера
-
-                }
-              }
             }
-            alert("Спасибо за комментарий!");
-            document.getElementById('comment').reset();
+            else {
+                document.getElementById(idfield).style.border="";
+                val[idfield]=1;
+            }
+        }
+        else {
+            document.getElementById(idfield).style.border="";
+            val[idfield]=1;
+        }
     }
-    else {alert("Проверьте корректность введенных данных")}
-  	//document.getElementById('summ').innerHTML = jsonText;
 
-}
+    function vphone(){
+        var tel =document.getElementById('Phone').value;
+        if(tel!=''){
+            if(tel.length==1){
+                tel="+7("+tel;
+            }
+            if(tel.length==6){
+                tel=tel+")";
+            }
+            if(tel.length==10||tel.length==13){
+                tel=tel+"-";
+            }
+           if(tel.length>16){
+                tel=tel.substring(0, tel.length - 1);
+           }
+            document.getElementById('Phone').value=tel;
+            if (/^\+\d\(\d{3}\)\d{3}-\d{2}-\d{2}$/.test(tel)==false){
+                document.getElementById('Phone').style='border: 3px solid red';
+            }
+            else{
+                document.getElementById('Phone').style='border: 1px solid #ccc';
+            }
+        }
+        else {
+            document.getElementById('Phone').style='border: 1px solid #ccc';
+            val['Phone']=1;
+        }
+    }
 
-function region() {
+    function getXmlHttp() {
+        var xmlhttp;
+        try {
+          xmlhttp = new ActiveXObject("Msxml2.XMLHTTP");
+        } catch (e) {
+        try {
+          xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        } catch (e) {
+          xmlhttp = false;
+        }
+        }
+        if (!xmlhttp && typeof XMLHttpRequest!='undefined') {
+          xmlhttp = new XMLHttpRequest();
+        }
+        return xmlhttp;
+      }
 
-	var objSel = document.getElementById("Region");
-	var regions = JSON.parse('''+js2+b''');
-	//objSel.options[objSel.options.length] = new Option();
-	//document.getElementById('fn3').innerHTML = regions[0][1];
-	for (var i=0; i < regions.length; i++){
-		objSel.options[objSel.options.length] = new Option(regions[i][1], regions[i][0]);
-	}
-	}
-function city(){
-	document.getElementById("City").options.length = 0;
-	if ( document.getElementById("Region").selectedIndex != -1 && document.getElementById("Region").options[document.getElementById("Region").selectedIndex].value ){
-		var region = JSON.stringify(document.getElementById("Region").value);
-		var xmlhttp = getXmlHttp(); // Создаём объект XMLHTTP
-		xmlhttp.open('POST', '/magnitcity', true); // Открываем асинхронное соединение
-		xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded'); // Отправляем кодировку
-		xmlhttp.send('region='+region); // Отправляем POST-запрос
-		xmlhttp.onreadystatechange = function() { // Ждём ответа от сервера
-			if (xmlhttp.readyState == 4) { // Ответ пришёл
-				if(xmlhttp.status == 200) { // Сервер вернул код 200 (что хорошо)
-					var cities=JSON.parse(xmlhttp.responseText);
+    function sendMessage() {
+        var summval=0;
+        var strsum='';
+        for (var i in val){summval=summval+val[i]; strsum=strsum+i+':'+val[i]};
+        if (summval==6){
+            var mess = new Object();
+            mess.lastname = document.getElementById('LastName').value;
+            mess.firstname = document.getElementById('FirstName').value;
+            mess.fathername=document.getElementById('Fathername').value;
+            mess.cityid=document.getElementById('City').value;
+            mess.phonenumber=document.getElementById('Phone').value;
+            mess.mail=document.getElementById('Mail').value;
+            mess.coment=document.getElementById('Message').value;
+            var jsonText = JSON.stringify(mess);
+            var xmlhttp = getXmlHttp();
+                xmlhttp.open('POST', '/magnitsmg', true);
+                xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                xmlhttp.send('mess='+jsonText);
+                xmlhttp.onreadystatechange = function() {
+                  if (xmlhttp.readyState == 4) {
+                    if(xmlhttp.status == 200) {
+                    alert("Спасибо за комментарий!");
+                    document.getElementById('comment').reset();
 
-					document.getElementById("City").options[document.getElementById("City").options.length] = new Option();
-					//document.getElementById('fn3').innerHTML = xmlhttp.responseText;
-					for (var i=0; i < cities.length; i++){
-						document.getElementById("City").options[document.getElementById("City").options.length] = new Option(cities[i][1], cities[i][0]);
-					}
+                    }
+                    else if (xmlhttp.status == 500){alert("Ошибка")}
+                  }
+                }
+        }
+        else {alert("Проверьте корректность введенных данных")}
+    }
 
-				}
-			}
-		}
+    function region() {
+        var objSel = document.getElementById("Region");
+        var regions = JSON.parse(''' + js2 + b''');
+        for (var i=0; i < regions.length; i++){
+            objSel.options[objSel.options.length] = new Option(regions[i][1], regions[i][0]);
+        }
+        }
 
-	}
+    function city(){
+        document.getElementById("City").options.length = 0;
+        if ( document.getElementById("Region").selectedIndex != -1 && document.getElementById("Region").options[document.getElementById("Region").selectedIndex].value ){
+            var region = JSON.stringify(document.getElementById("Region").value);
+            var xmlhttp = getXmlHttp();
+            xmlhttp.open('POST', '/magnitcity', true);
+            xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
-}
+            xmlhttp.onreadystatechange = function() {
+                if (xmlhttp.readyState == 4) {
+                    if(xmlhttp.status == 200) {
+                        var cities=JSON.parse(xmlhttp.responseText);
+                        for (var i=0; i < cities.length; i++){
+                            document.getElementById("City").options[document.getElementById("City").options.length] = new Option(cities[i][1], cities[i][0]);
+                        }
+                    }
+                    else if (xmlhttp.status == 500){alert("Ошибка")}
+                }
+            }
+            xmlhttp.send('region='+region);
+        }
+    }
 
 
 </script>
