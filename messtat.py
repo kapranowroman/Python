@@ -1,22 +1,11 @@
 # coding=utf-8
-arrregions= {
-	"Краснодарский край":{
 
-    	"Краснодар": 4,
-        "Кропоткин": 5
-     },
-     "Ставропольский край":{
-
-     	"Пятигорск": 5,
-        "Ставрополь": 6
-     }
-}
 messstat = b'''
-<!DOCTYPE html5> <!-- Объявление формата документа -->
+<!DOCTYPE html5>
 <html>
-<head> <!-- Техническая информация о документе -->
-<meta charset="UTF-8"> <!-- Определяем кодировку символов документа -->
-<title>...</title> <!-- Задаем заголовок документа -->
+<head>
+<meta charset="UTF-8">
+<title>...</title>
 
 </head>
 <body onload='showstat()'>
@@ -38,11 +27,6 @@ text-decoration:underline;
 </style>
 <script>
 var mess=[];
-var region = {
-	"Краснодарский край":"99f89ef5-fad9-48da-ad4c-de9ec296c7c8",
-    "Ставропольский край":"d33eaf26-d412-490b-8efd-7f870fe697aa"}
-
-
 function getXmlHttp() {
      var xmlhttp;
      try {
@@ -71,21 +55,17 @@ xmlhttp.onreadystatechange = function() { // Ждём ответа от серв
  	if (xmlhttp.readyState == 4) { // Ответ пришёл
  		if(xmlhttp.status == 200) { // Сервер вернул код 200 (что хорошо)
  			mess = JSON.parse(xmlhttp.responseText);
- 			//alert(mess["Краснодарский край"]["Краснодар"]);
-            for (var i in mess){
-	            var summ=0;
+ 			for (var i=0; i < mess.length; i++){
+
                 var div = document.createElement('div');
                 document.body.appendChild(div);
-                for (b in mess[i]){
-                    summ=summ+mess[i][b];
-                }
-                div.innerHTML = "<div><span onclick='city("+'"'+i+'"'+")'>"+i+':'+ summ+"</span></div>";
-                div.id=region[i];
+                div.innerHTML = "<div><span onclick='city("+'"'+mess[i][0]+'"'+")'>"+mess[i][1]+':'+ mess[i][2]+"</span></div>";
+                div.id=mess[i][0];
                 div.className = 'regions';
-                //alert(i)
+
             }
 
- 			//document.getElementById('fn3').innerHTML = xmlhttp.responseText;
+
         }
  	}
 }
@@ -93,20 +73,32 @@ xmlhttp.onreadystatechange = function() { // Ждём ответа от серв
 }
 
 function city(reg){
-//document.getElementById('region').parentNode.removeChild(document.getElementById('city'));
-//document.getElementById('region').remove(document.getElementById('region'));
-//alert(reg);
-//location.reload();
-if (document.getElementById('city')!=null){document.getElementById('city').remove()}
 var citydiv='';
-for (b in mess[reg]){
-	citydiv = citydiv+"<div><span>"+b+':'+ mess[reg][b]+"</span></div>";
+if (document.getElementById('city')!=null){document.getElementById('city').remove()}
+var xmlhttp = getXmlHttp();
+xmlhttp.open('POST', '/statcity', true);
+xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded'); // Отправляем кодировку
+reg2=JSON.stringify(reg)
+xmlhttp.send('statcity='+reg2); // Отправляем POST-запрос
+xmlhttp.onreadystatechange = function() { // Ждём ответа от сервера
+ 	if (xmlhttp.readyState == 4) { // Ответ пришёл
+ 		if(xmlhttp.status == 200) { // Сервер вернул код 200 (что хорошо)
+ 			mess = JSON.parse(xmlhttp.responseText);
+ 			for (var i=0; i < mess.length; i++){
+
+                var div = document.createElement('div');
+                citydiv = citydiv+"<div><span>"+mess[i][1]+':'+ mess[i][2]+"</span></div>";
+
+            }
+            var div = document.createElement('div');
+            div.id='city';
+            div.className='cities';
+            div.innerHTML=citydiv;
+            document.body.insertBefore(div, document.getElementById(reg).nextSibling);
+
+        }
+ 	}
 }
-var div = document.createElement('div');
-div.id='city';
-div.className='cities';
-div.innerHTML=citydiv;
-document.body.insertBefore(div, document.getElementById(region[reg]).nextSibling);
 }
 </script>
 </html>'''

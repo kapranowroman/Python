@@ -4,10 +4,11 @@ from db_magnit import selectregion
 
 js2="'"+selectregion()+"'"
 form = b'''
+<!DOCTYPE html5>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>...</title> <!-- Задаем заголовок документа -->
+<title>...</title>
 </head>
 
 <style>
@@ -76,9 +77,9 @@ select {
 }
 </style>
 
-<body onload='region()'> <!-- Основная часть документа -->
+<body onload='region()'>
 
-<form>
+<form id='comment'>
 
 	<label>Фамилия:</label>
 	<input type='text' oninput='validator("LastName")' oblur='validator("LastName")'  id='LastName' name='LastName' placeholder='Иванов' required>
@@ -101,12 +102,7 @@ select {
 
 	<input type="button" value="Отправить" onclick="sendMessage()" />
 </form>
-
-  <p>json местный: <span id="summ"></span></p>
-  <p>json вернулся: <span id="summ2"></span></p>
-   <p>JSON String: <span id="fn3"></span></p>
 </div>
-
 
 <script type="text/javascript">
 var val={'LastName': 0, 'FirstName': 0, 'Fathername': 1, 'Phone': 1, 'Mail':1, "Message":0};
@@ -198,10 +194,7 @@ function sendMessage() {
     var summval=0;
     var strsum='';
     for (var i in val){summval=summval+val[i]; strsum=strsum+i+':'+val[i]};
-    alert(strsum);
-    alert(summval);
     if (summval==6){
-        alert("все пучком!");
         var mess = new Object();
         mess.lastname = document.getElementById('LastName').value;
         mess.firstname = document.getElementById('FirstName').value;
@@ -218,17 +211,16 @@ function sendMessage() {
             xmlhttp.onreadystatechange = function() { // Ждём ответа от сервера
               if (xmlhttp.readyState == 4) { // Ответ пришёл
                 if(xmlhttp.status == 200) { // Сервер вернул код 200 (что хорошо)
-                  document.getElementById("summ2").innerHTML = xmlhttp.responseText; // Выводим ответ сервера
+                  //document.getElementById("summ2").innerHTML = xmlhttp.responseText; // Выводим ответ сервера
 
                 }
               }
             }
-            }
+            alert("Спасибо за комментарий!");
+            document.getElementById('comment').reset();
+    }
     else {alert("Проверьте корректность введенных данных")}
-  //var idColor = document.getElementById('LastName').value;
-
-  //var jstxt= JSON.
-	document.getElementById('summ').innerHTML = jsonText;
+  	//document.getElementById('summ').innerHTML = jsonText;
 
 }
 
@@ -256,14 +248,11 @@ function city(){
 					var cities=JSON.parse(xmlhttp.responseText);
 
 					document.getElementById("City").options[document.getElementById("City").options.length] = new Option();
-					document.getElementById('fn3').innerHTML = xmlhttp.responseText;
+					//document.getElementById('fn3').innerHTML = xmlhttp.responseText;
 					for (var i=0; i < cities.length; i++){
 						document.getElementById("City").options[document.getElementById("City").options.length] = new Option(cities[i][1], cities[i][0]);
 					}
-					//for (var i=0; i < cities.length; i++){
-					//	opt="<option value='"+cities[i][0]+"'>"+cities[i][1]+"</option>";
-					//	document.getElementById("City").innerHTML =opt;
-					//}
+
 				}
 			}
 		}

@@ -9,7 +9,7 @@ def selectregion():
         try:
                 conn = psycopg2.connect(connset)
         except:
-                print "ne pashet"
+                print "not work"
 
         cur=conn.cursor()
         cur.execute("""SELECT regionid, regionname from region""")
@@ -23,10 +23,10 @@ def selectcity(idregion):
         try:
                 conn = psycopg2.connect(connset)
         except:
-                print "ne pashet"
+                print "not work"
         
         cur=conn.cursor()
-        cur.execute("""SELECT cityid, cityname from city WHERE regionid='"""+idregion+"'")
+        cur.execute("""SELECT cityid, cityname from city WHERE regionid=%s""",[idregion])
         rows = cur.fetchall()
         cities=json.dumps(rows)
         conn.close()
@@ -36,7 +36,7 @@ def messtobase(messdict):
         try:
                 conn = psycopg2.connect(connset)
         except:
-                print "ne pashet"
+                print "not work"
         message=json.loads(messdict)        
         message['personid']=str(uuid.uuid4())
         if message['cityid']=='':
@@ -50,7 +50,7 @@ def messread():
         try:
                 conn = psycopg2.connect(connset)
         except:
-                print "ne pashet"
+                print "not work"
 
         cur=conn.cursor()
         cur.execute("""SELECT personid, coment from persons""")
@@ -63,10 +63,43 @@ def messdelfrombase(personid):
         try:
                 conn = psycopg2.connect(connset)
         except:
-                print "ne pashet"
+                print "not work"
         cur=conn.cursor()
         persid=json.loads(personid)
-        cur.execute("""DELETE from persons where personid='"""+persid+"'")
+        cur.execute("""DELETE from persons where personid=%s""",[persid])
         conn.commit()
         conn.close()
           
+def regstat():
+    try:
+        conn = psycopg2.connect(connset)
+
+    except:
+        print "not work"
+    cur = conn.cursor()
+    cur.execute("""SELECT r.regionid , r.regionname, count(p.personid)
+                    from persons p, city c, region r
+                    where r.regionid = c.regionid
+                    and c.cityid = p.cityid
+                    group by r.regionid , r.regionname
+                    having count(p.personid)>=5""")
+    rows = cur.fetchall()
+
+    conn.close()
+    return rows
+def citystat(regid):
+    try:
+        conn = psycopg2.connect(connset)
+
+    except:
+        print "not work"
+    cur = conn.cursor()
+    cur.execute("""SELECT c.cityid , c.cityname, count(c.cityid)
+                    from persons p, city c
+                    where c.regionid = %s
+                    and c.cityid = p.cityid
+                    group by c.cityid , c.cityname""",[regid])
+    rows = cur.fetchall()
+
+    conn.close()
+    return rows

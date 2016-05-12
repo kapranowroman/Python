@@ -1,15 +1,11 @@
 # coding: utf-8
 import json
-
-
-
-
 messlist = b'''
  <!DOCTYPE html5>
  <html>
- <head> <!-- Техническая информация о документе -->
- <meta charset="UTF-8"> <!-- Определяем кодировку символов документа -->
- <title>...</title> <!-- Задаем заголовок документа -->
+ <head>
+ <meta charset="UTF-8">
+ <title>...</title>
 
  </head>
 
