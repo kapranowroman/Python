@@ -77,7 +77,7 @@ def regstat():
                     where r.regionid = c.regionid
                     and c.cityid = p.cityid
                     group by r.regionid , r.regionname
-                    having count(p.personid)>=5""")
+                    having count(p.personid)>5""")
         rows = cur.fetchall()
         conn.close()
         return rows
